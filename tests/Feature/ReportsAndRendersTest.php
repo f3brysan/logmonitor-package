@@ -48,8 +48,7 @@ class ReportsAndRendersTest extends TestCase
 
         $response = $this->get('/__logcentral-smoke');
 
-        $response->assertDontSee('Terjadi Kesalahan', false);
-        $response->assertDontSee('LOG ID: 01featurelogid', false);
+        $response->assertSee('logcentral smoke test', false);
     }
 
     public function test_disabled_package_does_not_report_or_override_500(): void
