@@ -10,20 +10,7 @@ Supports Laravel 8–13 on PHP 8.1+.
 composer require febrysan/logcentral
 ```
 
-Until the package is on Packagist, add a path repository in the host app `composer.json` and require `@dev`:
-
-```json
-{
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../logmonitor-package"
-        }
-    ]
-}
-```
-
-Laravel package discovery registers `Febrysan\LogCentral\LogCentralServiceProvider`. No edit to `config/app.php` is required.
+Package: [packagist.org/packages/febrysan/logcentral](https://packagist.org/packages/febrysan/logcentral). Laravel package discovery registers `Febrysan\LogCentral\LogCentralServiceProvider`. No edit to `config/app.php` is required.
 
 ## Configuration
 
