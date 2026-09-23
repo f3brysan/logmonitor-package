@@ -91,9 +91,15 @@ class ErrorReporter
     private function payload(Throwable $e): array
     {
         $request = app()->bound('request') ? app('request') : null;
-        $user = is_object($request) && method_exists($request, 'user')
-            ? $request->user()
-            : null;
+        $user = null;
+
+        if (is_object($request) && method_exists($request, 'user')) {
+            try {
+                $user = $request->user();
+            } catch (Throwable $ignored) {
+                $user = null;
+            }
+        }
 
         $message = $e->getMessage();
         $userId = is_object($user) && method_exists($user, 'getAuthIdentifier')

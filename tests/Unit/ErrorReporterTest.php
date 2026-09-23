@@ -39,6 +39,35 @@ class ErrorReporterTest extends TestCase
         $this->assertSame('01logidfromroot', $this->app->make(ReportContext::class)->logId());
     }
 
+    public function test_user_resolver_exception_does_not_block_report(): void
+    {
+        Http::fake([
+            '*' => Http::response([
+                'success' => true,
+                'log_id' => '01afteruserfail',
+                'data' => ['id' => '01afteruserfail'],
+            ], 201),
+        ]);
+
+        $request = new class extends \Illuminate\Http\Request {
+            public function user($guard = null)
+            {
+                throw new RuntimeException('session down');
+            }
+        };
+        $request->initialize([], [], [], [], [], [
+            'HTTP_HOST' => 'example.test',
+            'REQUEST_URI' => '/x',
+            'REQUEST_METHOD' => 'GET',
+        ]);
+        $this->app->instance('request', $request);
+
+        $this->app->make(ErrorReporter::class)->report(new RuntimeException('boom'));
+
+        Http::assertSentCount(1);
+        $this->assertSame('01afteruserfail', $this->app->make(ReportContext::class)->logId());
+    }
+
     public function test_dont_report_skips_post(): void
     {
         config(['logcentral.dont_report' => [RuntimeException::class]]);
