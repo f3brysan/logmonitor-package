@@ -6,13 +6,11 @@ Supports Laravel 8–13 on PHP 8.1+.
 
 ## Install
 
-From a local clone (path repository):
-
 ```bash
 composer require febrysan/logcentral
 ```
 
-If the package is not on Packagist yet, add a path repository in the host app `composer.json`:
+Until the package is on Packagist, add a path repository in the host app `composer.json` and require `@dev`:
 
 ```json
 {
