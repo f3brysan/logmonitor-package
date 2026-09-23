@@ -1,0 +1,61 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - laravel: "8.*"
+            testbench: "6.*"
+            php: "8.1"
+            experimental: false
+          - laravel: "9.*"
+            testbench: "7.*"
+            php: "8.1"
+            experimental: false
+          - laravel: "10.*"
+            testbench: "8.*"
+            php: "8.1"
+            experimental: false
+          - laravel: "11.*"
+            testbench: "9.*"
+            php: "8.2"
+            experimental: false
+          - laravel: "12.*"
+            testbench: "10.*"
+            php: "8.2"
+            experimental: false
+          - laravel: "13.*"
+            testbench: "11.*"
+            php: "8.3"
+            experimental: true
+
+    name: L${{ matrix.laravel }} / PHP ${{ matrix.php }}
+    continue-on-error: ${{ matrix.experimental }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+
+      - name: Install dependencies
+        run: |
+          composer require \
+            "illuminate/support:${{ matrix.laravel }}" \
+            "illuminate/http:${{ matrix.laravel }}" \
+            "illuminate/contracts:${{ matrix.laravel }}" \
+            "orchestra/testbench:${{ matrix.testbench }}" \
+            --no-interaction --no-update
+          composer update --prefer-dist --no-interaction --no-progress
+
+      - name: Run tests
+        run: vendor/bin/phpunit
