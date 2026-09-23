@@ -13,26 +13,32 @@ jobs:
         include:
           - laravel: "8.*"
             testbench: "6.*"
+            phpunit: "9.6.*"
             php: "8.1"
             experimental: false
           - laravel: "9.*"
             testbench: "7.*"
+            phpunit: "9.6.*"
             php: "8.1"
             experimental: false
           - laravel: "10.*"
             testbench: "8.*"
+            phpunit: "10.*"
             php: "8.1"
             experimental: false
           - laravel: "11.*"
             testbench: "9.*"
+            phpunit: "10.*"
             php: "8.2"
             experimental: false
           - laravel: "12.*"
             testbench: "10.*"
+            phpunit: "11.*"
             php: "8.2"
             experimental: false
           - laravel: "13.*"
             testbench: "11.*"
+            phpunit: "11.*"
             php: "8.3"
             experimental: true
 
@@ -54,8 +60,9 @@ jobs:
             "illuminate/http:${{ matrix.laravel }}" \
             "illuminate/contracts:${{ matrix.laravel }}" \
             "orchestra/testbench:${{ matrix.testbench }}" \
-            --no-interaction --no-update
-          composer update --prefer-dist --no-interaction --no-progress
+            "phpunit/phpunit:${{ matrix.phpunit }}" \
+            --dev --no-interaction --no-update
+          composer update --prefer-dist --no-interaction --no-progress --with-all-dependencies
 
       - name: Run tests
         run: vendor/bin/phpunit
